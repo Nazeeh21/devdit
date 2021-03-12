@@ -1,0 +1,25 @@
+{
+  "name": "devsdit-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "tsc -w",
+    "dev": "nodemon dist/index.js",
+    "start": "node dist/index.js",
+    "start2": "ts-node src/index.ts",
+    "dev2": "nodemon --exec ts-node src/index.ts"
+
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^14.14.33",
+    "nodemon": "^2.0.7",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "ts-node": "^9.1.1"
+  }
+}
