@@ -7,6 +7,7 @@ import {
   InputType,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
 } from 'type-graphql';
 import argon2 from 'argon2';
@@ -39,30 +40,41 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, em }: MyContext) {
+    // you are not logged in
+    if (!req.session.userId) {
+      return null;
+    }
+
+    const user = await em.findOne(User, { id: req.session.userId });
+    return user;
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg('options') options: UsernamePasswordInput,
     @Ctx() { em }: MyContext
   ): Promise<UserResponse> {
-    if(options.username.length <= 2) {
+    if (options.username.length <= 2) {
       return {
         errors: [
           {
-            field: "username",
-            message: 'length must be greater than 2'
-          }
-        ]
+            field: 'username',
+            message: 'length must be greater than 2',
+          },
+        ],
       };
     }
 
-    if(options.password.length <= 2) {
+    if (options.password.length <= 2) {
       return {
         errors: [
           {
-            field: "password",
-            message: 'length must be greater than 3'
-          }
-        ]
+            field: 'password',
+            message: 'length must be greater than 3',
+          },
+        ],
       };
     }
 
@@ -74,20 +86,20 @@ export class UserResolver {
     try {
       await em.persistAndFlush(user);
     } catch (e) {
-      if(e.code === '23505' || e.detail.includes('already exists')) {
+      if (e.code === '23505' || e.detail.includes('already exists')) {
         // duplicate username error
         return {
           errors: [
             {
               field: 'username',
-              message: 'username already taken'
-            }
-          ]
-        }
+              message: 'username already taken',
+            },
+          ],
+        };
       }
-      console.log('error message', e.message)
+      console.log('error message', e.message);
     }
-    return { user }
+    return { user };
   }
 
   @Mutation(() => UserResponse)
@@ -121,13 +133,10 @@ export class UserResolver {
       };
     }
 
-    req.session!.userId = user.id
-    
+    req.session!.userId = user.id;
+
     return {
       user,
     };
   }
 }
-
-
-  

@@ -68,26 +68,35 @@ UserResponse = __decorate([
     type_graphql_1.ObjectType()
 ], UserResponse);
 let UserResolver = class UserResolver {
+    me({ req, em }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!req.session.userId) {
+                return null;
+            }
+            const user = yield em.findOne(User_1.User, { id: req.session.userId });
+            return user;
+        });
+    }
     register(options, { em }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (options.username.length <= 2) {
                 return {
                     errors: [
                         {
-                            field: "username",
-                            message: 'length must be greater than 2'
-                        }
-                    ]
+                            field: 'username',
+                            message: 'length must be greater than 2',
+                        },
+                    ],
                 };
             }
             if (options.password.length <= 2) {
                 return {
                     errors: [
                         {
-                            field: "password",
-                            message: 'length must be greater than 3'
-                        }
-                    ]
+                            field: 'password',
+                            message: 'length must be greater than 3',
+                        },
+                    ],
                 };
             }
             const hashedPassword = yield argon2_1.default.hash(options.password);
@@ -104,9 +113,9 @@ let UserResolver = class UserResolver {
                         errors: [
                             {
                                 field: 'username',
-                                message: 'username already taken'
-                            }
-                        ]
+                                message: 'username already taken',
+                            },
+                        ],
                     };
                 }
                 console.log('error message', e.message);
@@ -145,6 +154,13 @@ let UserResolver = class UserResolver {
         });
     }
 };
+__decorate([
+    type_graphql_1.Query(() => User_1.User, { nullable: true }),
+    __param(0, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "me", null);
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
     __param(0, type_graphql_1.Arg('options')),
