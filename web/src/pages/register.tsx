@@ -11,35 +11,34 @@ import { InputField } from '../components/InputField';
 import { Box } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
 import { useMutation } from 'urql';
+import { useRegisterMutation } from '../generated/graphql';
+import { toErrorMap } from '../utils/toErrorMap';
+import { useRouter } from 'next/router';
 
 interface registerProps {}
 
-const REGISTER_MUT = `
-mutation Register($username: String!, $password: String!) {
-  register(options: { username: $username, password: $password }) {
-    errors {
-      field
-      message
-    }
-
-    user {
-      id
-      createdAt
-      updatedAt
-      username
-    }
-  }
-}
-`;
-
 const Register: React.FC<registerProps> = ({}) => {
-  const [, register] = useMutation(REGISTER_MUT);
+  const router = useRouter();
+
+  const [, register] = useRegisterMutation();
   return (
     <Wrapper variant='small'>
       <Formik
         initialValues={{ username: '', password: '' }}
-        onSubmit={(values) => {
-          return register(values);
+        onSubmit={async (values, { setErrors }) => {
+          const response = await register(values);
+
+          if (response.data?.register.errors) {
+            console.log('error response in register user : ', response.data);
+            setErrors(toErrorMap(response.data.register.errors));
+            // syntax we are getting from backend [{field: 'username', message: 'something wrong'}]
+            // setErrors({
+            //   username: 'usernamee already taken'
+            // })
+          } else if (response.data?.register.user) {
+            // worked
+            router.push('/');
+          }
           // console.log(values);
         }}
       >
