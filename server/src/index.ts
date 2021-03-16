@@ -25,6 +25,7 @@ const main = async () => {
 
   app.use(cors({
     origin: 'http://localhost:3000',
+    // origin: 'https://devdit-kcbamcz6y-nazeeh2000.vercel.app',
     credentials: true
   }))
 
