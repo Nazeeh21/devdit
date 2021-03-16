@@ -86,6 +86,7 @@ export class UserResolver {
       password: hashedPassword,
     });
 
+    // all the commented code is for creating user using query builder
     // let user;
     try {
       // const result = await (em as EntityManager)
