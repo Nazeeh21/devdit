@@ -27,7 +27,7 @@ const client = createClient({
     cacheExchange({
       updates: {
         Mutation: {
-          login: (_result, args, cache, info) => {
+          login: (_result, _args, cache, _info) => {
             // ...
             betterUpdateQuery<LoginMutation, MeQuery>(
               cache,
@@ -44,7 +44,7 @@ const client = createClient({
               }
             );
           },
-          register: (_result, args, cache, info) => {
+          register: (_result, _args, cache, _info) => {
             // ...
             betterUpdateQuery<RegisterMutation, MeQuery>(
               cache,
@@ -61,12 +61,7 @@ const client = createClient({
               }
             );
           },
-        },
-        Subscription: {
-          subscriptionField: (result, args, cache, info) => {
-            // ...
-          },
-        },
+        }
       },
     }),
     fetchExchange,
