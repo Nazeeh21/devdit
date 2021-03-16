@@ -5,7 +5,7 @@ import {
   LoginMutation,
   MeDocument,
   MeQuery,
-  Query,
+  // Query,
   RegisterMutation,
 } from '../generated/graphql';
 
