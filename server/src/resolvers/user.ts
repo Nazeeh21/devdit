@@ -11,6 +11,7 @@ import {
   Resolver,
 } from 'type-graphql';
 import argon2 from 'argon2';
+import { COOKIE_NAME } from '../constants';
 // import { EntityManager } from '@mikro-orm/postgresql';
 
 @InputType()
@@ -160,5 +161,22 @@ export class UserResolver {
     return {
       user,
     };
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise((resolve) =>
+      req.session.destroy((err: any) => {
+        if (err) {
+          console.log(err)
+          resolve(false);
+          return
+        }
+
+        res.clearCookie(COOKIE_NAME)
+        resolve(true)
+        return
+      })
+    );
   }
 }
