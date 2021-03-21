@@ -149,6 +149,7 @@ export class UserResolver {
 
     let user;
     try {
+      // User.create({}).save()
       const result = await getConnection()
         .createQueryBuilder()
         .insert()
@@ -164,7 +165,7 @@ export class UserResolver {
       console.log('result: ', result);
       user = result.raw[0];
     } catch (e) {
-      console.log('error message: ', e.message);
+      // console.log('error message: ', e.message);
       if (e.code === '23505' || e.detail.includes('already exists')) {
         // duplicate username error
         return {

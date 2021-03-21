@@ -148,7 +148,6 @@ let UserResolver = class UserResolver {
                 user = result.raw[0];
             }
             catch (e) {
-                console.log('error message: ', e.message);
                 if (e.code === '23505' || e.detail.includes('already exists')) {
                     return {
                         errors: [
