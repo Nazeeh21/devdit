@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/button';
-import { Box } from '@chakra-ui/layout';
+import { Box, Flex, Link } from '@chakra-ui/layout';
 import { Form, Formik } from 'formik';
 import { NextPage } from 'next';
 import { withUrqlClient } from 'next-urql';
@@ -11,11 +11,12 @@ import Wrapper from '../../components/Wrapper';
 import { useChangePasswordMutation } from '../../generated/graphql';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import { toErrorMap } from '../../utils/toErrorMap';
+import NextLink from 'next/link';
 
 const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
   const router = useRouter();
-  const [tokenError, setTokenError] = useState('')
-  
+  const [tokenError, setTokenError] = useState('');
+
   const [, changePassword] = useChangePasswordMutation();
   return (
     <Wrapper variant='small'>
@@ -26,24 +27,24 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
             newPassword: values.newPassword,
             token,
           });
-            if (response.data?.changePassword.errors) {
-              console.log('error response in register user : ', response.data);
+          if (response.data?.changePassword.errors) {
+            console.log('error response in register user : ', response.data);
 
-              const errorMap = toErrorMap(response.data.changePassword.errors)
+            const errorMap = toErrorMap(response.data.changePassword.errors);
 
-              if('token' in errorMap) {
-                setTokenError(errorMap.token)
-              }
-
-              setErrors(errorMap);
-              // syntax we are getting from backend [{field: 'username', message: 'something wrong'}]
-              // setErrors({
-              //   username: 'usernamee already taken'
-              // })
-            } else if (response.data?.changePassword.user) {
-              // worked
-              router.push('/');
+            if ('token' in errorMap) {
+              setTokenError(errorMap.token);
             }
+
+            setErrors(errorMap);
+            // syntax we are getting from backend [{field: 'username', message: 'something wrong'}]
+            // setErrors({
+            //   username: 'usernamee already taken'
+            // })
+          } else if (response.data?.changePassword.user) {
+            // worked
+            router.push('/');
+          }
           // console.log(values);
         }}
       >
@@ -55,7 +56,16 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
               label='New Password'
               type='password'
             />
-            {tokenError && <Box olor='red'>{tokenError}</Box>}
+            {/* dffvdfd */}
+            {tokenError && (
+              <Flex> 
+                <Box color='red' mr={4}>{tokenError}</Box>
+                <NextLink href='/forgot-password'>
+                  <Link>click here to get new token</Link>
+                </NextLink>
+              </Flex>
+            )}
+
             <Button
               mt={4}
               type='submit'
@@ -77,4 +87,4 @@ ChangePassword.getInitialProps = ({ query }) => {
   };
 };
 // @ts-ignore
-export default withUrqlClient(createUrqlClient, {ssr: false})(ChangePassword);
+export default withUrqlClient(createUrqlClient, { ssr: false })(ChangePassword);
