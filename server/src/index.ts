@@ -1,8 +1,6 @@
 import 'reflect-metadata';
-import { MikroORM } from '@mikro-orm/core';
 import { COOKIE_NAME, __prod__ } from './constants';
 // import { Post } from './entities/Post';
-import microConfig from './mikro-orm.config';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
@@ -13,27 +11,39 @@ import Redis from 'ioredis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
 import { MyContext } from './types';
-import cors from 'cors' 
+import cors from 'cors';
+import { createConnection } from 'typeorm';
+import { Post } from './entities/Post';
+import { User } from './entities/User';
 // import { sendEmail } from './utils/sendEmail';
 // import { User } from './entities/User';
 
 const main = async () => {
   // sendEmail('nazeehvahora.786@gmail.com', 'First test email')
-  const orm = await MikroORM.init(microConfig);
 
-  // await orm.em.nativeDelete(User, {})
-  
-  await orm.getMigrator().up();
+  const conn = await createConnection({
+    type: 'postgres',
+    database: 'devdit2',
+    username: 'postgres',
+    password: '5616',
+    logging: true,
+    synchronize: true,
+    entities: [Post, User]
+  });
+
+
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redis = new Redis()
+  const redis = new Redis();
 
-  app.use(cors({
-    origin: 'http://localhost:3000',
-    // origin: 'https://devdit-kcbamcz6y-nazeeh2000.vercel.app',
-    credentials: true
-  }))
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      // origin: 'https://devdit-kcbamcz6y-nazeeh2000.vercel.app',
+      credentials: true,
+    })
+  );
 
   app.use(
     session({
@@ -56,7 +66,7 @@ const main = async () => {
       resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => ({ em: orm.em, req, res, redis }),
+    context: ({ req, res }): MyContext => ({ req, res, redis }),
   });
 
   apolloServer.applyMiddleware({
