@@ -42,6 +42,12 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Mutation(() => Boolean)
+  async forgotPassword(@Arg('email') email: string, @Ctx() { em }: MyContext) {
+    const user = await em.findOne(User, { email })
+    console.log(user)
+    return true;
+  }
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req, em }: MyContext) {
     console.log('Session: ', req.session);
@@ -168,14 +174,14 @@ export class UserResolver {
     return new Promise((resolve) =>
       req.session.destroy((err: any) => {
         if (err) {
-          console.log(err)
+          console.log(err);
           resolve(false);
-          return
+          return;
         }
 
-        res.clearCookie(COOKIE_NAME)
-        resolve(true)
-        return
+        res.clearCookie(COOKIE_NAME);
+        resolve(true);
+        return;
       })
     );
   }

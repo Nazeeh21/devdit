@@ -69,6 +69,13 @@ UserResponse = __decorate([
     type_graphql_1.ObjectType()
 ], UserResponse);
 let UserResolver = class UserResolver {
+    forgotPassword(email, { em }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield em.findOne(User_1.User, { email });
+            console.log(user);
+            return true;
+        });
+    }
     me({ req, em }) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('Session: ', req.session);
@@ -169,6 +176,13 @@ let UserResolver = class UserResolver {
         }));
     }
 };
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg('email')), __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "forgotPassword", null);
 __decorate([
     type_graphql_1.Query(() => User_1.User, { nullable: true }),
     __param(0, type_graphql_1.Ctx()),
