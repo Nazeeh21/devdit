@@ -18,7 +18,7 @@ import { User } from './entities/User';
 import path from 'path'
 // import { sendEmail } from './utils/sendEmail';
 // import { User } from './entities/User';
-
+// rerun
 const main = async () => {
   // sendEmail('nazeehvahora.786@gmail.com', 'First test email')
 
@@ -29,12 +29,13 @@ const main = async () => {
     password: '5616',
     logging: true,
     synchronize: true,
-    // migrations: [path.join(__dirname, './migrations/*')],
+    migrations: [path.join(__dirname, './migrations/*')],
     entities: [Post, User]
   });
 
   // await conn.runMigrations()
 
+  // await Post.delete({})
 
   const app = express();
 

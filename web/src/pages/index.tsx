@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Link, Stack, Text } from '@chakra-ui/layout';
 import { withUrqlClient } from 'next-urql';
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { usePostsQuery } from '../generated/graphql';
 import { createUrqlClient } from '../utils/createUrqlClient';
@@ -8,16 +8,18 @@ import NextLink from 'next/link';
 import { Button } from '@chakra-ui/button';
 
 const Index = () => {
+  const [variables, setVariables] = useState({
+    limit: 2,
+    cursor: null as string | null,
+  });
   const [{ data, fetching }] = usePostsQuery({
-    variables: {
-      limit: 10,
-    },
+    variables,
   });
 
   if (!data && !fetching) {
     return <div>You got no posts, query failed for some reason</div>;
   }
-  
+
   return (
     <Layout>
       <Flex alignItems='center' justifyContent='space-between'>
@@ -44,7 +46,12 @@ const Index = () => {
       )}
       {data && (
         <Flex>
-          <Button isLoading={fetching} mx='auto' my={8} colorScheme='cyan'>
+          <Button onClick={() => {
+            setVariables({
+              limit: variables.limit,
+              cursor: data.posts[data.posts.length - 1].createdAt
+            })
+          }} isLoading={fetching} mx='auto' my={8} colorScheme='cyan'>
             Load more
           </Button>
         </Flex>
