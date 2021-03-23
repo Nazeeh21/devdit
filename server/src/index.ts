@@ -29,11 +29,11 @@ const main = async () => {
     password: '5616',
     logging: true,
     synchronize: true,
-    migrations: [path.join(__dirname, './migrations/*')],
+    // migrations: [path.join(__dirname, './migrations/*')],
     entities: [Post, User]
   });
 
-  await conn.runMigrations()
+  // await conn.runMigrations()
 
 
   const app = express();
