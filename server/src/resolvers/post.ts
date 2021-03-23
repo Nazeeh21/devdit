@@ -4,6 +4,7 @@ import {
   Ctx,
   Field,
   InputType,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -25,18 +26,23 @@ class PostInput {
 export class PostResolver {
   @Query(() => [Post])
   async posts(
-    @Arg('limit') limit: number,
+    @Arg('limit', () => Int) limit: number,
     @Arg('cursor', () => String, { nullable: true }) cursor: string | null
   ): Promise<Post[]> {
-    const realLimit = Math.min(50, limit)
+    const realLimit = Math.min(50, limit);
     // return Post.find();
-    return await getConnection()
+    const qb = await getConnection()
       .getRepository(Post)
       .createQueryBuilder('p')
-      // .where("user.id = :id", { id: 1 })
       .orderBy('"createdAt"', 'DESC')
       .take(realLimit)
-      .getMany();
+
+      if(cursor) {
+      qb.where('"createdAt" < :cursor', { cursor: new Date(+cursor) })
+      }
+
+      return qb.getMany();
+      
   }
 
   @Query(() => Post, { nullable: true })
