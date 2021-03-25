@@ -5,8 +5,7 @@ import Layout from '../components/Layout';
 import { usePostsQuery } from '../generated/graphql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 import NextLink from 'next/link';
-import { Button, IconButton } from '@chakra-ui/button';
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import { Button } from '@chakra-ui/button';
 import { UpdootSection } from '../components/UpdootSection';
 
 const Index = () => {
