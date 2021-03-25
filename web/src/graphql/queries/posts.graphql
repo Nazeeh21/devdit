@@ -5,6 +5,7 @@ query Posts($limit: Int!, $cursor: String) {
       id
       createdAt
       updatedAt
+      points
       title
       textSnippet
       creator {
