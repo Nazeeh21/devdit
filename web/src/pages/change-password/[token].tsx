@@ -31,7 +31,7 @@ const ChangePassword: NextPage = ({}) => {
               typeof router.query.token === 'string' ? router.query.token : '',
           });
           if (response.data?.changePassword.errors) {
-            console.log('error response in register user : ', response.data);
+            // console.log('error response in register user : ', response.data);
 
             const errorMap = toErrorMap(response.data.changePassword.errors);
 

@@ -23,7 +23,7 @@ const Login: React.FC<{}> = ({}) => {
           const response = await login(values);
 
           if (response.data?.login.errors) {
-            console.log('error response in register user : ', response.data);
+            // console.log('error response in register user : ', response.data);
             setErrors(toErrorMap(response.data.login.errors));
             // syntax we are getting from backend [{field: 'username', message: 'something wrong'}]
             // setErrors({

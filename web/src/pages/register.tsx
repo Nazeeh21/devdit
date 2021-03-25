@@ -31,7 +31,7 @@ const Register: React.FC<registerProps> = ({}) => {
           const response = await register({ options: values});
 
           if (response.data?.register.errors) {
-            console.log('error response in register user : ', response.data);
+            // console.log('error response in register user : ', response.data);
             setErrors(toErrorMap(response.data.register.errors));
             // syntax we are getting from backend [{field: 'username', message: 'something wrong'}]
             // setErrors({
