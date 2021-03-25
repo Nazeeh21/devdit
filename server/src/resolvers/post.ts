@@ -71,6 +71,7 @@ export class PostResolver {
       set points = points + $1
       where id =  $2`,
           [2 * realValue, postId]
+        );
       })
     } else if (!updoot) {
       // has never voted before
