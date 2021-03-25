@@ -6,12 +6,14 @@ import {
   MeDocument,
   MeQuery,
   RegisterMutation,
+  VoteMutationVariables,
 } from '../generated/graphql';
 import { betterUpdateQuery } from './betterUpdateQuery';
 
 import { pipe, tap } from 'wonka';
 import { Exchange } from 'urql';
 import Router from 'next/router';
+import { gql } from '@urql/core';
 
 const errorExchange: Exchange = ({ forward }) => (ops$) => {
   return pipe(
@@ -155,15 +157,41 @@ export const createUrqlClient = (ssrExchange: any) => ({
       },
       updates: {
         Mutation: {
+          vote: (_result, _args, cache, _info) => {
+            const { postId, value } = _args as VoteMutationVariables;
+
+            const data = cache.readFragment(
+              gql`
+                fragment _ on Post {
+                  id
+                  points
+                }
+              `,
+              { id: postId }
+            ); // Data or null
+
+            console.log('data: ', data);
+            if (data) {
+              const newPoints = +data.points + value;
+
+              cache.writeFragment(
+                gql`
+                  fragment _ on Post {
+                    points
+                  }
+                `,
+                { id: postId, points: newPoints }
+              );
+            }
+          },
           createPost: (_result, _args, cache, _info) => {
-
-              const allFields = cache.inspectFields('Query')
-              const fieldInfos = allFields.filter(info => info.fieldName === 'posts')
-              fieldInfos.forEach(fieldInfo => {
-                cache.invalidate('Query', 'posts', fieldInfo.arguments || {});
-              })
-            
-
+            const allFields = cache.inspectFields('Query');
+            const fieldInfos = allFields.filter(
+              (info) => info.fieldName === 'posts'
+            );
+            fieldInfos.forEach((fieldInfo) => {
+              cache.invalidate('Query', 'posts', fieldInfo.arguments || {});
+            });
           },
           logout: (_result, _args, cache, _info) => {
             betterUpdateQuery<LogoutMutation, MeQuery>(
