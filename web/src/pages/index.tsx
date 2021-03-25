@@ -23,12 +23,6 @@ const Index = () => {
 
   return (
     <Layout>
-      <Flex alignItems='center' justifyContent='space-between'>
-        <Heading>DevDit</Heading>
-        <NextLink href='/create-post'>
-          <Link>create post</Link>
-        </NextLink>
-      </Flex>
       <br />
       <div>Assalamu alaikum</div>
       {fetching && !data ? (

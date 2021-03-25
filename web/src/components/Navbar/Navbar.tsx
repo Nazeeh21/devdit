@@ -37,6 +37,9 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     // user is logged in
     body = (
       <Flex alignItems='center'>
+        <NextLink href='/create-post'>
+          <Button mr={4} as={Link}>create post</Button>
+        </NextLink>
         <Box mr={2}>{data.me.username}</Box>
         <Button
           onClick={() => {
@@ -51,7 +54,8 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     );
   }
   return (
-    <Flex zIndex={1} position='sticky' top={3} bg='tan' p={4} alignItems='center'>
+    <Flex zIndex={1} position='sticky' top={3} bg='tan' p={4} >
+      <Flex flex={1} m='auto' alignItems='center' maxW={800}>
       <NextLink href='/'>
         <Link>
           <Heading>
@@ -61,6 +65,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
       </NextLink>
       <Box ml='auto'>{body}</Box>
       {/* Pretty good */}
+      </Flex>
     </Flex>
   );
 };
