@@ -129,7 +129,7 @@ let PostResolver = class PostResolver {
         });
     }
     post(id) {
-        return Post_1.Post.findOne(id);
+        return Post_1.Post.findOne(id, { relations: ['creator'] });
     }
     createPost(input, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -183,7 +183,7 @@ __decorate([
 ], PostResolver.prototype, "posts", null);
 __decorate([
     type_graphql_1.Query(() => Post_1.Post, { nullable: true }),
-    __param(0, type_graphql_1.Arg('id')),
+    __param(0, type_graphql_1.Arg('id', () => type_graphql_1.Int)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
