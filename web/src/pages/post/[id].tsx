@@ -4,6 +4,7 @@ import React from 'react';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import { usePostQuery } from '../../generated/graphql';
 import Layout from '../../components/Layout';
+import { Box, Heading } from '@chakra-ui/layout';
 
 const Post = ({}) => {
   const router = useRouter();
@@ -18,19 +19,26 @@ const Post = ({}) => {
     },
   });
 
-  let body: any = ''
-
   if(fetching) {
-      body = 'loading'
-  } else {
-      body = data?.post?.text
-  }
+     return <Layout>
+         <div>loading...</div>
+     </Layout>
+  } 
 
   if(error) {
       console.log('error in fetching post', error.message)
   }
+
+  if(!data?.post) {
+      return <Layout>
+          <Box>
+              Post not found
+          </Box>
+      </Layout>
+  }
   return <Layout>
-      <div>{body}</div>
+      <Heading mb={4}>{data.post.title}</Heading>
+      {data?.post?.text}
   </Layout>;
 };
 

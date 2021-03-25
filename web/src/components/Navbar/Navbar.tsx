@@ -1,4 +1,4 @@
-import { Box, Flex, Link } from '@chakra-ui/layout';
+import { Box, Flex, Heading, Link } from '@chakra-ui/layout';
 import React from 'react';
 import NextLink from 'next/link';
 import { useMeQuery, useLogoutMutation } from '../../generated/graphql';
@@ -8,9 +8,9 @@ import { isServer } from '../../utils/isServer';
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = ({}) => {
-  const [{fetching: logoutFetching}, logout] = useLogoutMutation();
+  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({
-    pause: isServer()
+    pause: isServer(),
   });
 
   // console.log('data : ', data)
@@ -38,14 +38,27 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     body = (
       <Flex alignItems='center'>
         <Box mr={2}>{data.me.username}</Box>
-        <Button onClick={() => {
-          logout()
-        }} isLoading={logoutFetching} variant='link'>Logout</Button>
+        <Button
+          onClick={() => {
+            logout();
+          }}
+          isLoading={logoutFetching}
+          variant='link'
+        >
+          Logout
+        </Button>
       </Flex>
     );
   }
   return (
-    <Flex zIndex={1} position='sticky' top={3} bg='tan' p={4}>
+    <Flex zIndex={1} position='sticky' top={3} bg='tan' p={4} alignItems='center'>
+      <NextLink href='/'>
+        <Link>
+          <Heading>
+            Devdit
+          </Heading>
+        </Link>
+      </NextLink>
       <Box ml='auto'>{body}</Box>
       {/* Pretty good */}
     </Flex>

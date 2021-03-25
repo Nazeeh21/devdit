@@ -39,7 +39,7 @@ const Index = () => {
             <Flex key={post.id} p={5} shadow='md' borderWidth='1px'>
               <UpdootSection post={post} />
               <Box>
-                <NextLink href={`/post/${post.id}`}>
+                <NextLink href='/post/[id]' as={`/post/${post.id}`}>
                   <Link>
                     <Heading fontSize='xl'>{post.title}</Heading>
                   </Link>
