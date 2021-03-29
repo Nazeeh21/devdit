@@ -1,13 +1,13 @@
+import { Button } from '@chakra-ui/button';
 import { Box, Flex, Heading, Link, Stack, Text } from '@chakra-ui/layout';
 import { withUrqlClient } from 'next-urql';
-import React, { useState } from 'react';
-import Layout from '../components/Layout';
-import { useDeletePostMutation, useMeQuery, usePostsQuery } from '../generated/graphql';
-import { createUrqlClient } from '../utils/createUrqlClient';
 import NextLink from 'next/link';
-import { Button, IconButton } from '@chakra-ui/button';
+import React, { useState } from 'react';
+import { EditDeletPostButtons } from '../components/EditDeletPostButtons';
+import Layout from '../components/Layout';
 import { UpdootSection } from '../components/UpdootSection';
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { useMeQuery, usePostsQuery } from '../generated/graphql';
+import { createUrqlClient } from '../utils/createUrqlClient';
 
 const Index = () => {
   const [variables, setVariables] = useState({
@@ -18,8 +18,7 @@ const Index = () => {
     variables,
   });
 
-  const [, deletePost] = useDeletePostMutation();
-  const [{ data: meData }] = useMeQuery()
+  // const [{ data: meData }] = useMeQuery()
 
   if (!data && !fetching) {
     return <div>You got no posts, query failed for some reason</div>;
@@ -47,24 +46,13 @@ const Index = () => {
                   <Text mt={4}>{post.textSnippet}</Text>
                 </Box>
                 {/* console.log(post) */}
-                {meData?.me?.id === post.creator.id && <Box mt={4} ml='auto'>
-                  <NextLink href='post/edit/[id]' as={`post/edit/${post.id}`}>
-                    <IconButton
-                      as={Link}
-                      mr={4}
-                      aria-label='Edit Post'
-                      icon={<EditIcon w={6} h={6} />}
-                    />
-                  </NextLink>
+                <Box mt={4} ml='auto'>
+                  <EditDeletPostButtons id={post.id} creatorId={post.creator.id} />
+                </Box>
 
-                  <IconButton
-                    onClick={async () => {
-                      await deletePost({ id: post.id });
-                    }}
-                    aria-label='Delete Post'
-                    icon={<DeleteIcon w={6} h={6} />}
-                  />
-                </Box>}
+                {/* {meData?.me?.id === post.creator.id && <Box mt={4} ml='auto'>
+                  <EditDeletPostButtons id={post.id} />
+                </Box>} */}
               </Flex>
               // <div key={post.id}>{post.title}</div>
             )
