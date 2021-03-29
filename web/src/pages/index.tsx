@@ -14,14 +14,19 @@ const Index = () => {
     limit: 10,
     cursor: null as string | null,
   });
-  const [{ data, fetching }] = usePostsQuery({
+  const [{ data, error, fetching }] = usePostsQuery({
     variables,
   });
 
   // const [{ data: meData }] = useMeQuery()
 
   if (!data && !fetching) {
-    return <div>You got no posts, query failed for some reason</div>;
+    return (
+      <div>
+        You got no posts, query failed for some reason
+        <div>{error?.message}</div>
+      </div>
+    );
   }
 
   return (
@@ -47,7 +52,10 @@ const Index = () => {
                 </Box>
                 {/* console.log(post) */}
                 <Box mt={4} ml='auto'>
-                  <EditDeletPostButtons id={post.id} creatorId={post.creator.id} />
+                  <EditDeletPostButtons
+                    id={post.id}
+                    creatorId={post.creator.id}
+                  />
                 </Box>
 
                 {/* {meData?.me?.id === post.creator.id && <Box mt={4} ml='auto'>
