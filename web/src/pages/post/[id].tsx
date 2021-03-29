@@ -4,6 +4,7 @@ import { createUrqlClient } from '../../utils/createUrqlClient';
 import Layout from '../../components/Layout';
 import { Box, Heading } from '@chakra-ui/layout';
 import { useGetPostFromUrl } from '../../utils/useGetPostFromUrl';
+import { EditDeletPostButtons } from '../../components/EditDeletPostButtons';
 // import { Button } from '@chakra-ui/button';
 // import { useRouter } from 'next/router';
 // import { useGetIntId } from '../../utils/useGetIntId';
@@ -38,6 +39,9 @@ const Post = ({}) => {
     <Layout>
       <Heading mb={4}>{data.post.title}</Heading>
       {data?.post?.text}
+      <Box mt={4}>
+        <EditDeletPostButtons creatorId={data.post.creator.id} id={data.post.id} />
+      </Box>
       {/* {meData?.me?.id === data.post.creator.id && (
         <Box mt={2}>
           <Button
