@@ -1,19 +1,9 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MockPost1616614189466 = void 0;
-class MockPost1616614189466 {
-    up(queryRunner) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield queryRunner.query(`
+import {MigrationInterface, QueryRunner} from "typeorm";
+
+export class MockPost1616989251871 implements MigrationInterface {
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`
         insert into post (title, text, "creatorId", "createdAt") values ('Stunt Rock', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.', 1, '2020-09-01T21:15:47Z');
 insert into post (title, text, "creatorId", "createdAt") values ('RoboCop 3', 'Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.
 
@@ -301,13 +291,10 @@ Fusce consequat. Nulla nisl. Nunc nisl.
 Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', 1, '2020-12-28T10:49:44Z');
 insert into post (title, text, "creatorId", "createdAt") values ('Brown''s Requiem', 'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.', 1, '2021-02-03T16:57:47Z');
 
-        `);
-        });
+        `)
     }
-    down(_queryRunner) {
-        return __awaiter(this, void 0, void 0, function* () {
-        });
+
+    public async down(_queryRunner: QueryRunner): Promise<void> {
     }
+
 }
-exports.MockPost1616614189466 = MockPost1616614189466;
-//# sourceMappingURL=1616614189466-MockPost.js.map
