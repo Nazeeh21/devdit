@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { EditDeletPostButtons } from '../components/EditDeletPostButtons';
 import Layout from '../components/Layout';
 import { UpdootSection } from '../components/UpdootSection';
-import { useMeQuery, usePostsQuery } from '../generated/graphql';
+import { usePostsQuery } from '../generated/graphql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 
 const Index = () => {
