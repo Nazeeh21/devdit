@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { COOKIE_NAME, __prod__ } from './constants';
 // import { Post } from './entities/Post';
 import express from 'express';
+import 'dotenv-safe/config';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { HelloResolver } from './resolvers/hello';
@@ -27,27 +28,26 @@ const main = async () => {
 
   const conn = await createConnection({
     type: 'postgres',
-    database: 'devdit2',
-    username: 'postgres',
-    password: '5616',
+    url: process.env.DATABASE_URL,
     logging: true,
-    synchronize: true,
+    // synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
     entities: [Post, User, Updoot],
   });
 
-  // await conn.runMigrations()
+  await conn.runMigrations()
 
   // await Post.delete({})
 
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redis = new Redis();
+  const redis = new Redis(process.env.REDIS_URL);
 
+  app.set('proxy', 1);
   app.use(
     cors({
-      origin: 'http://localhost:3000',
+      origin: process.env.CORS_ORIGIN,
       // origin: 'https://devdit-kcbamcz6y-nazeeh2000.vercel.app',
       credentials: true,
     })
@@ -62,9 +62,10 @@ const main = async () => {
         httpOnly: true,
         sameSite: 'lax', //csrf
         secure: __prod__, //cookie only works in https
+        domain: __prod__ ? '.codeponder.com' : undefined,
       },
       saveUninitialized: false,
-      secret: 'kfndkcjbsjdfjknfkjkvdfhckjv',
+      secret: process.env.SESSION_SECRET,
       resave: false,
     })
   );
@@ -88,7 +89,7 @@ const main = async () => {
     cors: false,
   });
 
-  app.listen(4000, () => {
+  app.listen(+process.env.PORT, () => {
     console.log('server started on port localhost:4000');
   });
 
