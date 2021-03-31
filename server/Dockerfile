@@ -16,8 +16,6 @@ COPY .env.production .env
 
 RUN yarn build
 
-# Bundle app source
-
 ENV NODE_ENV production
 
 EXPOSE 8080
