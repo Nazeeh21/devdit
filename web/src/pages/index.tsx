@@ -32,7 +32,7 @@ const Index = () => {
   return (
     <Layout>
       <br />
-      <div>Assalamu alaikum</div>
+      {/* <div>Assalamu alaikum</div> */}
       {fetching && !data ? (
         <div>loading...</div>
       ) : (
