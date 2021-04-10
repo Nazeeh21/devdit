@@ -1,9 +1,31 @@
-# Example app with [chakra-ui](https://github.com/chakra-ui/chakra-ui)
+# Devdit (https://devdit.me)
 
-This example features how to use [chakra-ui](https://github.com/chakra-ui/chakra-ui) as the component library within a Next.js app.
+Devdit provides an environment for developers to post updates about the new teck stacks and to post developer's kindoff stuff.
 
-We are connecting the Next.js `_app.js` with `chakra-ui`'s Theme and ColorMode containers so the pages can have app-wide dark/light mode. We are also creating some components which shows the usage of `chakra-ui`'s style props.
+## Tech stack used for backend
 
+- `GraphQl`
+- `URQL`
+- `Nodejs`
+- `Typeorm`
+- `TypeGraphQL`
+- `PostgreSQL`
+
+## Teck stack used for frontend
+
+- `Nextjs`
+- `TypeScript`
+- `ChakraUI`
+- `Redis`
+
+## Other tech stacks
+
+- `Docker`
+- `Argon`
+
+### Frontend deployed using [Versel](https://vercel.com/)
+
+### Backend deployed using [Dokku]
 ## Deploy your own
 
 Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
