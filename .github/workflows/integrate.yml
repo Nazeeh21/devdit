@@ -20,6 +20,7 @@ jobs:
         with: 
           node-version: 14
           submodules: true
+          app_location: "/" # App source code path
       - run: yarn
       - run: yarn build
       # working-directory: server
