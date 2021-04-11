@@ -3,7 +3,7 @@ name: Continuous Integration CI/CD
 on:
   push: 
     paths: 
-      - '/'
+      - '/*'
     branches:
       - '*'
     pull_request:
