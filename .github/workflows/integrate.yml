@@ -2,9 +2,9 @@ name: Continuous Integration CI/CD
 
 on:
   push: 
-    paths: 
-      - 'server/'
-      - 'web/'
+    # paths: 
+    #   - 'server/'
+    #   - 'web/'
     branches:
       - '*'
     pull_request:
@@ -23,7 +23,8 @@ jobs:
         with: 
           node-version: 14
           submodules: true
-          # app_location: "/" # App source code path
+          app_location: "/" # App source code path
       - run: yarn
       - run: yarn build
-      # working-directory: server
+      working-directory: 'server'
+      # working-directory: '/'
