@@ -20,11 +20,11 @@ jobs:
     steps: 
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-        working-directory: server
-      # working-directory: '/'
         with: 
           node-version: 14
           # submodules: true
           app_location: "/" # App source code path
       - run: yarn
       - run: yarn build
+      working-directory: 'server'
+      # working-directory: '/'
