@@ -2,8 +2,8 @@ name: Continuous Integration CI/CD
 
 on:
   push: 
-    paths: 
-      - '/*'
+    # paths: 
+    #   - '/*'
     branches:
       - '*'
     pull_request:
