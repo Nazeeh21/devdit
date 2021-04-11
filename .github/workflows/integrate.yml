@@ -11,6 +11,9 @@ on:
 
 jobs:
   build_job:
+    defaults:
+      run:
+        working-directory: server
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build Job
@@ -20,8 +23,5 @@ jobs:
         working-directory: ./server
         with: 
           node-version: 14
-          # submodules: true
-          # app_location: "./" # App source code path
       - run: yarn
       - run: yarn build
-      # working-directory: '/'
