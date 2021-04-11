@@ -1,5 +1,5 @@
 ssr
     browser -> nextjs -> graphql api
 
-client side 
+client side  
     browser -> graphql
