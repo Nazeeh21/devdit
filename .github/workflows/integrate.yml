@@ -22,4 +22,4 @@ jobs:
           submodules: true
       - run: yarn
       - run: yarn build
-      working-directory: server
+      # working-directory: server
