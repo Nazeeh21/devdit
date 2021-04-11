@@ -11,7 +11,7 @@ on:
 
 jobs:
   build_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' and github.event.action != 'closed')
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build Job
     # working_directory: server
