@@ -66,6 +66,7 @@ export class CommentResolver {
   @UseMiddleware(isAuth)
   async commentVote(
     @Arg('commentId', () => Int) commentId: number,
+    @Arg('postId', () => Int) postId: number,
     @Arg('value', () => Int) value: number,
     @Ctx() { req }: MyContext
   ) {
@@ -105,10 +106,10 @@ export class CommentResolver {
       await getConnection().transaction(async (tm) => {
         await tm.query(
           `
-          insert into comment_updoot ("userId", "commentId", value)
-          values ($1, $2, $3)
+          insert into comment_updoot ("userId", "commentId", "postId", value)
+          values ($1, $2, $3, $4)
           `,
-          [userId, commentId, realValue]
+          [userId, commentId, postId, realValue]
         );
 
         await tm.query(

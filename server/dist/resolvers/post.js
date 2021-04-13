@@ -29,6 +29,7 @@ const typeorm_1 = require("typeorm");
 const Updoot_1 = require("../entities/Updoot");
 const User_1 = require("../entities/User");
 const Comment_1 = require("../entities/Comment");
+const CommentUpdoot_1 = require("../entities/CommentUpdoot");
 let PostInput = class PostInput {
 };
 __decorate([
@@ -156,6 +157,10 @@ let PostResolver = class PostResolver {
             const comments = yield Comment_1.Comment.find({ where: { postId: id } });
             if (comments) {
                 yield Comment_1.Comment.delete({ postId: id });
+            }
+            const commentUpdoots = yield CommentUpdoot_1.CommentUpdoot.find({ where: { postId: id } });
+            if (commentUpdoots) {
+                yield CommentUpdoot_1.CommentUpdoot.delete({ postId: id });
             }
             return true;
         });

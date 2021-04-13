@@ -23,6 +23,10 @@ export class CommentUpdoot extends BaseEntity {
   @PrimaryColumn()
   commentId: number;
 
+  @Field()
+  @Column()
+  postId: number;
+
   // // @Field(() => Post)
   // @ManyToOne(() => Post, (post) => post.updoots, {
   //   onDelete: 'CASCADE'
