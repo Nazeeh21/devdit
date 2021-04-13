@@ -126,6 +126,7 @@ export class CommentResolver {
 
   @Query(() => PaginatedComments)
   async comments(
+    @Arg('postId', () => Int) postId: number,
     @Arg('limit', () => Int) limit: number,
     @Arg('cursor', () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedComments> {
@@ -141,14 +142,16 @@ export class CommentResolver {
       `
       select c.*
       from comment c
-      ${cursor ? `where c."createdAt" < $2` : ''}
+      where 
+      ${cursor ? `c."createdAt" < $2 &&` : ''}
+      "postId" = ${postId}
       order by c."createdAt" DESC
       limit $1
     `,
       replacements
     );
 
-    console.log(comments);
+    console.log('comments are : ', comments);
     return {
       comments: comments.slice(0, realLimit),
       hasMore: comments.length === realLimitPlusOne,
@@ -159,9 +162,10 @@ export class CommentResolver {
   @UseMiddleware(isAuth)
   async createComment(
     @Arg('input') input: CommentInput,
+    @Arg('postId') postId: number,
     @Ctx() { req }: MyContext
   ): Promise<Comment> {
-    return Comment.create({ ...input, creatorId: req.session.userId }).save();
+    return Comment.create({ ...input, creatorId: req.session.userId, postId }).save();
   }
 
   @Mutation(() => Comment, { nullable: true })
