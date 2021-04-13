@@ -20,22 +20,27 @@ import path from 'path';
 import { Updoot } from './entities/Updoot';
 import { createUserLoader } from './utils/createUserLoader';
 import { createUpdootLoader } from './utils/createUpdootLoader';
+import { Comment } from './entities/Comment';
+import { CommentUpdoot } from './entities/CommentUpdoot';
 // import { sendEmail } from './utils/sendEmail';
 // import { User } from './entities/User';
 // rerun
 const main = async () => {
   // sendEmail('nazeehvahora.786@gmail.com', 'First test email')
 
+
+  // command for generating tables: npx typeorm migartion:generate -n Initial
+  // @ts-ignore
   const conn = await createConnection({
     type: 'postgres',
     url: process.env.DATABASE_URL,
     logging: true,
-    // synchronize: true,
+    synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
-    entities: [Post, User, Updoot],
+    entities: [Post, User, Updoot, Comment, CommentUpdoot],
   });
 
-  await conn.runMigrations()
+  // await conn.runMigrations()
 
   // await Post.delete({})
 

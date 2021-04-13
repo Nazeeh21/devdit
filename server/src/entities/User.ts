@@ -8,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Comment } from './Comment';
+import { CommentUpdoot } from './CommentUpdoot';
 import { Post } from './Post';
 import { Updoot } from './Updoot';
 
@@ -33,8 +35,16 @@ export class User extends BaseEntity {
   @OneToMany(() => Post, (post) => post.creator)
   posts: Post[];
 
+  // field for comment
+  @OneToMany(() => Comment, (comment) => comment.creator)
+  comments: Comment[];
+
   @OneToMany(() => Updoot, (updoot) => updoot.user)
   updoots: Updoot[];
+
+  // field for comment updoot
+  @OneToMany(() => CommentUpdoot, (commentUpdoot) => commentUpdoot.user)
+  commentUpdoots: CommentUpdoot[];
 
   @Field(() => String)
   @CreateDateColumn({ type: 'date' })

@@ -32,19 +32,21 @@ const path_1 = __importDefault(require("path"));
 const Updoot_1 = require("./entities/Updoot");
 const createUserLoader_1 = require("./utils/createUserLoader");
 const createUpdootLoader_1 = require("./utils/createUpdootLoader");
+const Comment_1 = require("./entities/Comment");
+const CommentUpdoot_1 = require("./entities/CommentUpdoot");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield typeorm_1.createConnection({
         type: 'postgres',
         url: process.env.DATABASE_URL,
         logging: true,
+        synchronize: true,
         migrations: [path_1.default.join(__dirname, './migrations/*')],
-        entities: [Post_1.Post, User_1.User, Updoot_1.Updoot],
+        entities: [Post_1.Post, User_1.User, Updoot_1.Updoot, Comment_1.Comment, CommentUpdoot_1.CommentUpdoot],
     });
-    yield conn.runMigrations();
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default(process.env.REDIS_URL);
-    app.set('proxy', 1);
+    app.set('trust proxy', 1);
     app.use(cors_1.default({
         origin: process.env.CORS_ORIGIN,
         credentials: true,
