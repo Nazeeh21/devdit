@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { CommentUpdoot } from './CommentUpdoot';
-import { Post } from './Post';
+// import { Post } from './Post';
 import { User } from './User';
 
 @ObjectType()
@@ -40,11 +40,11 @@ export class Comment extends BaseEntity {
   @Column()
   postId: number;
 
-  @Field(() => Post)
-  @ManyToOne(() => Post, (post) => post.comments)
-  post: Post;
+  // @Field(() => Post)
+  // @ManyToOne(() => Post, (post) => post.comments)
+  // post: Post;
 
-  @Field()
+  @Field(() => User)
   @ManyToOne(() => User, (user) => user.comments)
   creator: User;
 

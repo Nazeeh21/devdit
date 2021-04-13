@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Comment } from './Comment';
+// import { Comment } from './Comment';
 import { Updoot } from './Updoot';
 import { User } from './User';
 @ObjectType()
@@ -55,8 +55,8 @@ export class Post extends BaseEntity {
   updatedAt: Date;
 
   // field for comments
-  @Field(() => [Comment], { nullable: true })
-  @OneToMany(() => Comment, (comment) => comment.post)
-  comments: Comment[];
+  // @Field(() => [Comment], { nullable: true })
+  // @OneToMany(() => Comment, (comment) => comment.post)
+  // comments: Comment[];
 
 }

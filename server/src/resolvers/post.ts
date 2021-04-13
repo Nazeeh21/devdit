@@ -18,6 +18,7 @@ import { isAuth } from '../middleware/isAuth';
 import { getConnection } from 'typeorm';
 import { Updoot } from '../entities/Updoot';
 import { User } from '../entities/User';
+import { Comment } from '../entities/Comment';
 
 @InputType()
 class PostInput {
@@ -226,6 +227,12 @@ export class PostResolver {
 
     await Post.delete({ id, creatorId: req.session.userId });
 
+    const comments = await Comment.find({ where: { postId: id}})
+
+    if( comments )
+    {
+      await Comment.delete({ postId: id })
+    }
     return true;
   }
 }

@@ -18,6 +18,7 @@ import { MyContext } from '../types';
 import { isAuth } from '../middleware/isAuth';
 import { CommentUpdoot } from '../entities/CommentUpdoot';
 import { getConnection } from 'typeorm';
+import { Post } from '../entities/Post';
 
 @InputType()
 class CommentInput {
@@ -47,7 +48,7 @@ export class CommentResolver {
   }
 
   @FieldResolver(() => Int)
-  async voteStatus(
+  async CommentVoteStatus(
     @Root() comment: Comment,
     @Ctx() { commentUpdootLoader, req }: MyContext
   ) {
@@ -63,7 +64,7 @@ export class CommentResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
-  async vote(
+  async commentVote(
     @Arg('commentId', () => Int) commentId: number,
     @Arg('value', () => Int) value: number,
     @Ctx() { req }: MyContext
@@ -164,8 +165,16 @@ export class CommentResolver {
     @Arg('input') input: CommentInput,
     @Arg('postId') postId: number,
     @Ctx() { req }: MyContext
-  ): Promise<Comment> {
-    return Comment.create({ ...input, creatorId: req.session.userId, postId }).save();
+  ): Promise<Comment | null> {
+    const post = await Post.find({ where: { id: postId }})
+    console.log('post while commenting exists or not: ', post)
+    if(post) {
+
+      return Comment.create({ ...input, creatorId: req.session.userId, postId }).save();
+    } else {
+      return null
+
+    }
   }
 
   @Mutation(() => Comment, { nullable: true })
