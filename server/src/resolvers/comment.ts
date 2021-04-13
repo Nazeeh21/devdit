@@ -166,15 +166,21 @@ export class CommentResolver {
     @Arg('postId') postId: number,
     @Ctx() { req }: MyContext
   ): Promise<Comment | null> {
-    const post = await Post.find({ where: { id: postId }})
-    console.log('post while commenting exists or not: ', post)
-    if(post) {
+    const post = await Post.find({ where: { id: postId } });
+    console.log('post while commenting exists or not: ', post);
 
-      return Comment.create({ ...input, creatorId: req.session.userId, postId }).save();
-    } else {
-      return null
-
+    if (post.length === 0) {
+      console.log('--------------post does not exist of might got deleted-------------------');  
+      return null;
     }
+
+    console.log('--------------creating comments-------------------');
+
+    return Comment.create({
+      ...input,
+      creatorId: req.session.userId,
+      postId,
+    }).save();
   }
 
   @Mutation(() => Comment, { nullable: true })
