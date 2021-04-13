@@ -16,12 +16,12 @@ export class CommentUpdoot extends BaseEntity {
   userId: number;
 
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.updoots)
+  @ManyToOne(() => User, (user) => user.commentUpdoots)
   user: User;
 
   // @Field()
   @PrimaryColumn()
-  postId: number;
+  commentId: number;
 
   // // @Field(() => Post)
   // @ManyToOne(() => Post, (post) => post.updoots, {

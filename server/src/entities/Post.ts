@@ -55,7 +55,7 @@ export class Post extends BaseEntity {
   updatedAt: Date;
 
   // field for comments
-  @Field(() => [Comment])
+  @Field(() => [Comment], { nullable: true })
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 

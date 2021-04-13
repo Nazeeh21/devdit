@@ -1,0 +1,200 @@
+import { Comment } from '../entities/Comment';
+import {
+  Arg,
+  Ctx,
+  Field,
+  FieldResolver,
+  InputType,
+  Int,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+  Root,
+  UseMiddleware,
+} from 'type-graphql';
+import { User } from '../entities/User';
+import { MyContext } from '../types';
+import { isAuth } from '../middleware/isAuth';
+import { CommentUpdoot } from '../entities/CommentUpdoot';
+import { getConnection } from 'typeorm';
+
+@InputType()
+class CommentInput {
+  @Field()
+  text: string;
+}
+
+@ObjectType()
+class PaginatedComments {
+  @Field(() => [Comment])
+  comments: Comment[];
+
+  @Field()
+  hasMore: boolean;
+}
+
+@Resolver(Comment)
+export class CommentResolver {
+  @FieldResolver(() => String)
+  textSnippet(@Root() root: Comment) {
+    return root.text.slice(0, 50);
+  }
+
+  @FieldResolver(() => User)
+  creator(@Root() comment: Comment, @Ctx() { userLoader }: MyContext) {
+    return userLoader.load(comment.creatorId);
+  }
+
+  @FieldResolver(() => Int)
+  async voteStatus(
+    @Root() comment: Comment,
+    @Ctx() { commentUpdootLoader, req }: MyContext
+  ) {
+    if (!req.session.userId) {
+      return null;
+    }
+    const commentUpdoot = await commentUpdootLoader.load({
+      commentId: comment.id,
+      userId: req.session.userId,
+    });
+    return commentUpdoot ? commentUpdoot.value : null;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async vote(
+    @Arg('commentId', () => Int) commentId: number,
+    @Arg('value', () => Int) value: number,
+    @Ctx() { req }: MyContext
+  ) {
+    const isUpdoot = value !== -1;
+    const realValue = isUpdoot ? 1 : -1;
+    const { userId } = req.session;
+
+    const commentUpdoot = await CommentUpdoot.findOne({
+      where: { commentId, userId },
+    });
+
+    if (commentUpdoot && commentUpdoot.value !== realValue) {
+      // the user has voted on the post before and they are changing their vote
+
+      await getConnection().transaction(async (tm) => {
+        await tm.query(
+          `
+          update commentUpdoot
+          set value = $1
+          where "commentId" = $2 and "userId" = $3
+          `,
+          [realValue, commentId, userId]
+        );
+
+        await tm.query(
+          `
+          update comment
+          set points = points + $1
+          where id = $2
+          `,
+          [2 * realValue, commentId]
+        );
+      });
+    } else if (!commentUpdoot) {
+      // has never voted before
+
+      await getConnection().transaction(async (tm) => {
+        await tm.query(
+          `
+          insert into commentUpdoot ("userId", "commentId", value)
+          values ($1, $2, $3)
+          `,
+          [userId, commentId, realValue]
+        );
+
+        await tm.query(
+          `
+          update comment 
+          set points = points + $1
+          where id = $2
+          `,
+          [realValue, commentId]
+        );
+      });
+    }
+
+    return true;
+  }
+
+  @Query(() => PaginatedComments)
+  async comments(
+    @Arg('limit', () => Int) limit: number,
+    @Arg('cursor', () => String, { nullable: true }) cursor: string | null
+  ): Promise<PaginatedComments> {
+    // 20 -> 21
+
+    const realLimit = Math.min(50, limit);
+
+    const realLimitPlusOne = realLimit + 1;
+
+    const replacements: any[] = [realLimitPlusOne];
+
+    const comments = await getConnection().query(
+      `
+      select c.*
+      from comment c
+      ${cursor ? `where c."createdAt" < $2` : ''}
+      order by c."createdAt" DESC
+      limit $1
+    `,
+      replacements
+    );
+
+    console.log(comments);
+    return {
+      comments: comments.slice(0, realLimit),
+      hasMore: comments.length === realLimitPlusOne,
+    };
+  }
+
+  @Mutation(() => Comment)
+  @UseMiddleware(isAuth)
+  async createComment(
+    @Arg('input') input: CommentInput,
+    @Ctx() { req }: MyContext
+  ): Promise<Comment> {
+    return Comment.create({ ...input, creatorId: req.session.userId }).save();
+  }
+
+  @Mutation(() => Comment, { nullable: true })
+  @UseMiddleware(isAuth)
+  async updateComment(
+    @Arg('id', () => Int) id: number,
+    @Arg('text', { nullable: true }) text: string,
+    @Ctx() { req }: MyContext
+  ): Promise<Comment | null> {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .update(Comment)
+      .set({ text })
+      .where('id = :id and "creatorId" = :creatorId', {
+        id: id,
+        creatorId: req.session.userId,
+      })
+      .returning('*')
+      .execute();
+
+    console.log('result: ', result);
+
+    return result.raw[0];
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async deleteComment(
+    @Arg('id', () => Int) id: number,
+    @Ctx() { req }: MyContext
+  ): Promise<boolean> {
+    await Comment.delete({ id, creatorId: req.session.userId });
+
+    return true;
+  }
+}
