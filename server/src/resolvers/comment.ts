@@ -83,7 +83,7 @@ export class CommentResolver {
       await getConnection().transaction(async (tm) => {
         await tm.query(
           `
-          update commentUpdoot
+          update comment_updoot
           set value = $1
           where "commentId" = $2 and "userId" = $3
           `,
@@ -105,7 +105,7 @@ export class CommentResolver {
       await getConnection().transaction(async (tm) => {
         await tm.query(
           `
-          insert into commentUpdoot ("userId", "commentId", value)
+          insert into comment_updoot ("userId", "commentId", value)
           values ($1, $2, $3)
           `,
           [userId, commentId, realValue]
@@ -213,7 +213,6 @@ export class CommentResolver {
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
     await Comment.delete({ id, creatorId: req.session.userId });
-
     return true;
   }
 }
