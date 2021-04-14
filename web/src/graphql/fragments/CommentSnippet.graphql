@@ -5,7 +5,7 @@ fragment CommentSnippet on Comment {
   createdAt
   points
   textSnippet
-  # commentVoteStatus
+  commentVoteStatus
   creator {
     id
     username

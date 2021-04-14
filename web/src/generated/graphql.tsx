@@ -213,7 +213,7 @@ export type CommentInput = {
 
 export type CommentSnippetFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'text' | 'postId' | 'createdAt' | 'points' | 'textSnippet'>
+  & Pick<Comment, 'id' | 'text' | 'postId' | 'createdAt' | 'points' | 'textSnippet' | 'commentVoteStatus'>
   & { creator: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'username'>
@@ -417,7 +417,7 @@ export type CommentQuery = (
   { __typename?: 'Query' }
   & { comment?: Maybe<(
     { __typename?: 'Comment' }
-    & Pick<Comment, 'id' | 'text' | 'textSnippet' | 'points'>
+    & Pick<Comment, 'id' | 'text' | 'textSnippet' | 'commentVoteStatus' | 'points'>
     & { creator: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
@@ -498,6 +498,7 @@ export const CommentSnippetFragmentDoc = gql`
   createdAt
   points
   textSnippet
+  commentVoteStatus
   creator {
     id
     username
@@ -697,6 +698,7 @@ export const CommentDocument = gql`
     id
     text
     textSnippet
+    commentVoteStatus
     points
     creator {
       id

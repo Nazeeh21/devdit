@@ -3,7 +3,7 @@ query Comment($id: Int!){
     id
     text
     textSnippet
-    # commentVoteStatus
+    commentVoteStatus
     points
     creator{
       id
