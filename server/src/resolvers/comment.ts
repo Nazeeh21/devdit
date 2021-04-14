@@ -62,8 +62,9 @@ export class CommentResolver {
       userId: req.session.userId,
     });
 
-    console.log('commentUpdoot: ', commentUpdoot!.value)
-    return commentUpdoot ? commentUpdoot!.value : null;
+    console.log('commentUpdoot: ', commentUpdoot)
+    // return commentUpdoot != undefined && commentUpdoot !== null ? commentUpdoot!.value : null;
+    return commentUpdoot ? commentUpdoot!.value : null
   }
 
   @Mutation(() => Boolean)

@@ -30,7 +30,7 @@ export class Comment extends BaseEntity {
   points!: number;
 
   @Field(() => Int, { nullable: true })
-  voteStatus: number | null; // 1 or -1 or null
+  commentVoteStatus: number | null; // 1 or -1 or null
 
   @Field()
   @Column()
