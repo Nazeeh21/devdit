@@ -9,7 +9,7 @@ import { useGetIntId } from '../utils/useGetIntId';
 import { useIsAuth } from '../utils/useIsAuth';
 import { InputField } from './InputField';
 
-const CreateComment: React.FC = () => {
+const CreateComment: React.FC<{}> = ({}) => {
   const postId = useGetIntId();
   const [, createComment] = useCreateCommentMutation();
   useIsAuth();
@@ -19,10 +19,13 @@ const CreateComment: React.FC = () => {
       <Formik
         initialValues={{ text: '' }}
         onSubmit={async (values) => {
+          console.log('creating comment')
           const { error } = await createComment({ ...values, postId });
 
           if (!error) {
             console.log('comment created successfully');
+          } else {
+            console.log('error while creating comment: ', error)
           }
         }}
       >

@@ -92,6 +92,59 @@ const cursorPagination = (): Resolver => {
   };
 };
 
+const cursorPaginationforComments = (): Resolver => {
+  return (_parent, fieldArgs, cache, info) => {
+    const { parentKey: entityKey, fieldName } = info;
+    // console.log(entityKey, fieldName);
+
+    const allFields = cache.inspectFields(entityKey);
+    // console.log('allFields: ', allFields);
+
+    const fieldInfos = allFields.filter((info) => info.fieldName === fieldName);
+    // console.log(fieldInfos);
+
+    const size = fieldInfos.length;
+    if (size === 0) {
+      return undefined;
+    }
+
+    // console.log('fieldArgs: ', fieldArgs);
+
+    const fieldKey = `${fieldName}(${stringifyVariables(fieldArgs)})`;
+    // console.log('Key we created: ', fieldKey);
+
+    const isItInTheCache = cache.resolve(
+      cache.resolve(entityKey, fieldKey) as string,
+      'comments'
+    );
+    // console.log('isItInTheCache', isItInTheCache);
+
+    info.partial = !isItInTheCache;
+
+    const results: string[] = [];
+
+    let hasMore = true;
+
+    fieldInfos.forEach((fieldInfo) => {
+      const key = cache.resolve(entityKey, fieldInfo.fieldKey) as string;
+      const data = cache.resolve(key, 'comments') as string[];
+      const _hasMore = cache.resolve(key, 'hasMore');
+
+      if (!_hasMore) {
+        hasMore = _hasMore as boolean;
+      }
+      // const data = cache.resolve(entityKey, fieldInfo.fieldKey) as string[];
+      results.push(...data);
+    });
+
+    return {
+      __typename: 'PaginatedComments',
+      hasMore,
+      posts: results,
+    };
+  };
+};
+
 const invalidateAllPosts = (cache: Cache) => {
   const allFields = cache.inspectFields('Query');
   const fieldInfos = allFields.filter((info) => info.fieldName === 'posts');
@@ -133,6 +186,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         resolvers: {
           Query: {
             posts: cursorPagination(),
+            comments: cursorPaginationforComments()
           },
         },
         updates: {
@@ -182,7 +236,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 );
               }
             },
-            voteComment: (_result, _args, cache, _info) => {
+            commentVote: (_result, _args, cache, _info) => {
               const { commentId, value } = _args as CommentVoteMutationVariables;
 
               const data = cache.readFragment(

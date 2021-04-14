@@ -88,14 +88,13 @@ export type Comment = {
   id: Scalars['Float'];
   text: Scalars['String'];
   points: Scalars['Float'];
-  voteStatus?: Maybe<Scalars['Int']>;
+  commentVoteStatus?: Maybe<Scalars['Int']>;
   creatorId: Scalars['Float'];
   postId: Scalars['Float'];
   creator: User;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   textSnippet: Scalars['String'];
-  commentVoteStatus: Scalars['Int'];
 };
 
 export type Mutation = {
@@ -274,7 +273,7 @@ export type CreateCommentMutation = (
   { __typename?: 'Mutation' }
   & { createComment: (
     { __typename?: 'Comment' }
-    & Pick<Comment, 'id' | 'text' | 'points' | 'voteStatus' | 'creatorId' | 'postId'>
+    & Pick<Comment, 'id' | 'text' | 'points' | 'commentVoteStatus' | 'creatorId' | 'postId'>
   ) }
 );
 
@@ -560,7 +559,7 @@ export const CreateCommentDocument = gql`
     id
     text
     points
-    voteStatus
+    commentVoteStatus
     creatorId
     postId
   }

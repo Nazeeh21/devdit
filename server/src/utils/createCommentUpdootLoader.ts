@@ -16,22 +16,6 @@ export const createCommentUpdootLoader = () =>
 
       console.log('----------------commentupdootloader running ------------------')
       console.log('commentUpdoots: ', commentUpdoots);
-      // keys.filter(
-      //   (key) => {
-      //     const content = updootIdsToUpdoot[`${key.userId}|${key.commentId}`];
-      //     return content === undefined ? false : true
-
-      //   }
-      // );
-
-      // keys.map(
-      //   (key) => {
-      //     const content = updootIdsToUpdoot[`${key.userId}|${key.commentId}`];
-      //     console.log('return from createCommentUpdootLoader: ', content)
-
-      //   }
-      // );
-
       return keys.map(
         (key) => updootIdsToUpdoot[`${key.userId}|${key.commentId}`]
       );

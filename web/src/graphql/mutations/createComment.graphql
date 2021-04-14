@@ -3,7 +3,7 @@ mutation CreateComment($text: String!, $postId: Int!) {
     id
     text 
     points
-    voteStatus
+    commentVoteStatus
     creatorId
     postId
   }
