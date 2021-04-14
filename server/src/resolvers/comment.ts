@@ -164,7 +164,7 @@ export class CommentResolver {
   @UseMiddleware(isAuth)
   async createComment(
     @Arg('input') input: CommentInput,
-    @Arg('postId') postId: number,
+    @Arg('postId', () => Int) postId: number,
     @Ctx() { req }: MyContext
   ): Promise<Comment | null> {
     const post = await Post.find({ where: { id: postId } });
