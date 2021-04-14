@@ -1,20 +1,21 @@
 import { Button } from '@chakra-ui/button';
 import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/layout';
+import { withUrqlClient } from 'next-urql';
 import React, { useState } from 'react';
 import { useCommentsQuery } from '../../generated/graphql';
+import { createUrqlClient } from '../../utils/createUrqlClient';
+import { useGetIntId } from '../../utils/useGetIntId';
 import { CommentUpdootSection } from '../CommentUpdootSection';
+import { EditDeleteCommentButtons } from '../EditDeleteCommentButtons';
 // import Layout from '../Layout';
 import Wrapper from '../Wrapper';
 
-interface CommentsProps {
-  postId: number
-}
-
-export const Comments: React.FC<CommentsProps> = ({postId}) => {
+const Comments: React.FC = () => {
+  const intId = useGetIntId()
   const [variables, setVariables] = useState({
     limit: 10,
     cursor: null as string | null,
-    postId
+    postId: intId
   });
   const [{ data, error, fetching }] = useCommentsQuery({
     variables,
@@ -43,7 +44,7 @@ export const Comments: React.FC<CommentsProps> = ({postId}) => {
             !comment ? null : (
               <Flex key={comment.id} p={5} shadow='md' borderWidth='1px'>
                 {/* Comment updoot section */}
-                <CommentUpdootSection comment={comment} postId={postId} />
+                <CommentUpdootSection comment={comment} postId={intId} />
                 <Box>
                   <Text>{comment.text}</Text>
                   <Text mt={4}>Posted by: {comment.creator.username}</Text>
@@ -51,6 +52,7 @@ export const Comments: React.FC<CommentsProps> = ({postId}) => {
 
                 <Box mt={4} ml='auto'>
                   {/* Edit delete comment Buttons */}
+                  <EditDeleteCommentButtons creatorId={comment.creator.id} id={comment.id} />
                 </Box>
               </Flex>
             )
@@ -63,7 +65,7 @@ export const Comments: React.FC<CommentsProps> = ({postId}) => {
             onClick={() => {
               setVariables({
                 limit: variables.limit,
-                postId,
+                postId: intId,
                 cursor:
                   data.comments.comments[data.comments.comments.length - 1]
                     .createdAt,
@@ -81,3 +83,5 @@ export const Comments: React.FC<CommentsProps> = ({postId}) => {
     </Wrapper>
   );
 };
+
+export default withUrqlClient(createUrqlClient)(Comments)

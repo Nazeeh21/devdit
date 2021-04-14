@@ -5,7 +5,8 @@ import Layout from '../../components/Layout';
 import { Box, Heading } from '@chakra-ui/layout';
 import { useGetPostFromUrl } from '../../utils/useGetPostFromUrl';
 import { EditDeletPostButtons } from '../../components/EditDeletPostButtons';
-import { Comments } from '../../components/Comments/Comments';
+import Comments from '../../components/Comments/Comments';
+import CreateComment from '../../components/CreateComment';
 // import { Button } from '@chakra-ui/button';
 // import { useRouter } from 'next/router';
 // import { useGetIntId } from '../../utils/useGetIntId';
@@ -57,7 +58,8 @@ const Post = ({}) => {
           </Button>
         </Box>
       )} */}
-      <Comments postId={data.post.id} />
+      <Comments pageProps />
+      <CreateComment pageProps />
     </Layout>
   );
 };

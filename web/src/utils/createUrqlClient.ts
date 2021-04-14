@@ -1,6 +1,8 @@
 import { Cache, cacheExchange, Resolver } from '@urql/exchange-graphcache';
 import { dedupExchange, fetchExchange, stringifyVariables } from 'urql';
 import {
+  CommentVoteMutationVariables,
+  DeleteCommentMutationVariables,
   DeletePostMutationVariables,
   LoginMutation,
   LogoutMutation,
@@ -98,6 +100,14 @@ const invalidateAllPosts = (cache: Cache) => {
   });
 };
 
+const invalidateAllComments = (cache: Cache) => {
+  const allFields = cache.inspectFields('Query');
+  const fieldInfos = allFields.filter((info) => info.fieldName === 'comments');
+  fieldInfos.forEach((fieldInfo) => {
+    cache.invalidate('Query', 'comments', fieldInfo.arguments || {});
+  });
+};
+
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   let cookie = '';
   if (isServer()) {
@@ -133,6 +143,12 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 id: (_args as DeletePostMutationVariables).id,
               });
             },
+            deleteComment: (_result, _args, cache, _info) => {
+              cache.invalidate({
+                __typename: 'Comment',
+                id: (_args as DeleteCommentMutationVariables).id,
+              });
+            },
             vote: (_result, _args, cache, _info) => {
               const { postId, value } = _args as VoteMutationVariables;
 
@@ -165,6 +181,42 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   { id: postId, points: newPoints, voteStatus: value }
                 );
               }
+            },
+            voteComment: (_result, _args, cache, _info) => {
+              const { commentId, value } = _args as CommentVoteMutationVariables;
+
+              const data = cache.readFragment(
+                gql`
+                  fragment _ on Comment {
+                    id
+                    points
+                    commentVoteStatus
+                  }
+                `,
+                { id: commentId }
+              ); // Data or null
+
+              // console.log('data: ', data);
+              if (data) {
+                if (data.commentVoteStatus === value) {
+                  return;
+                }
+                const newPoints =
+                  data.points + (!data.commentVoteStatus ? 1 : 2) * value;
+
+                cache.writeFragment(
+                  gql`
+                    fragment _ on Comment {
+                      points
+                      commentVoteStatus
+                    }
+                  `,
+                  { id: commentId, points: newPoints, commentVoteStatus: value }
+                );
+              }
+            },
+            createComment: (_result, _args, cache, _info) => {
+              invalidateAllComments(cache);
             },
             createPost: (_result, _args, cache, _info) => {
               invalidateAllPosts(cache);

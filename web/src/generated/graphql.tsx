@@ -21,6 +21,7 @@ export type Query = {
   post?: Maybe<Post>;
   me?: Maybe<User>;
   comments: PaginatedComments;
+  comment?: Maybe<Comment>;
 };
 
 
@@ -39,6 +40,11 @@ export type QueryCommentsArgs = {
   cursor?: Maybe<Scalars['String']>;
   limit: Scalars['Int'];
   postId: Scalars['Int'];
+};
+
+
+export type QueryCommentArgs = {
+  id: Scalars['Int'];
 };
 
 export type PaginatedPosts = {
@@ -207,7 +213,7 @@ export type CommentInput = {
 
 export type CommentSnippetFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'text' | 'postId' | 'createdAt' | 'points' | 'textSnippet' | 'commentVoteStatus'>
+  & Pick<Comment, 'id' | 'text' | 'postId' | 'createdAt' | 'points' | 'textSnippet'>
   & { creator: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'username'>
@@ -402,6 +408,23 @@ export type CommentVoteMutation = (
   & Pick<Mutation, 'commentVote'>
 );
 
+export type CommentQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type CommentQuery = (
+  { __typename?: 'Query' }
+  & { comment?: Maybe<(
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id' | 'text' | 'textSnippet' | 'points'>
+    & { creator: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    ) }
+  )> }
+);
+
 export type CommentsQueryVariables = Exact<{
   postId: Scalars['Int'];
   limit: Scalars['Int'];
@@ -475,7 +498,6 @@ export const CommentSnippetFragmentDoc = gql`
   createdAt
   points
   textSnippet
-  commentVoteStatus
   creator {
     id
     username
@@ -668,6 +690,24 @@ export const CommentVoteDocument = gql`
 
 export function useCommentVoteMutation() {
   return Urql.useMutation<CommentVoteMutation, CommentVoteMutationVariables>(CommentVoteDocument);
+};
+export const CommentDocument = gql`
+    query Comment($id: Int!) {
+  comment(id: $id) {
+    id
+    text
+    textSnippet
+    points
+    creator {
+      id
+      username
+    }
+  }
+}
+    `;
+
+export function useCommentQuery(options: Omit<Urql.UseQueryArgs<CommentQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<CommentQuery>({ query: CommentDocument, ...options });
 };
 export const CommentsDocument = gql`
     query Comments($postId: Int!, $limit: Int!, $cursor: String) {

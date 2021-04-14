@@ -164,6 +164,11 @@ export class CommentResolver {
     };
   }
 
+  @Query(() => Comment, { nullable: true })
+  comment(@Arg('id', () => Int) id: number): Promise<Comment | undefined> {
+    return Comment.findOne(id);
+  }
+
   @Mutation(() => Comment)
   @UseMiddleware(isAuth)
   async createComment(

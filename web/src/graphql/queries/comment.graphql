@@ -1,0 +1,13 @@
+query Comment($id: Int!){
+  comment(id: $id) {
+    id
+    text
+    textSnippet
+    # commentVoteStatus
+    points
+    creator{
+      id
+      username
+    }
+  }
+}
