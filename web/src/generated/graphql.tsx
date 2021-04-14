@@ -89,7 +89,7 @@ export type Comment = {
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   textSnippet: Scalars['String'];
-  CommentVoteStatus: Scalars['Int'];
+  commentVoteStatus: Scalars['Int'];
 };
 
 export type Mutation = {
@@ -207,7 +207,7 @@ export type CommentInput = {
 
 export type CommentSnippetFragment = (
   { __typename?: 'Comment' }
-  & Pick<Comment, 'id' | 'text' | 'postId' | 'createdAt' | 'points' | 'textSnippet' | 'voteStatus'>
+  & Pick<Comment, 'id' | 'text' | 'postId' | 'createdAt' | 'points' | 'textSnippet' | 'commentVoteStatus'>
   & { creator: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'username'>
@@ -475,7 +475,7 @@ export const CommentSnippetFragmentDoc = gql`
   createdAt
   points
   textSnippet
-  voteStatus
+  commentVoteStatus
   creator {
     id
     username

@@ -17,7 +17,7 @@ export const CommentUpdootSection: React.FC<CommentUpdootSectionProps> = ({comme
     return (
       <Flex direction='column' justifyContent='center' alignItems='center' mr={4}>
         <IconButton isLoading={isLoading === 'updoot-loading'} onClick={async () => {
-          if(comment.voteStatus === 1) {
+          if(comment.commentVoteStatus === 1) {
             return 
           }
           setIsLoading('updoot-loading')
@@ -29,14 +29,14 @@ export const CommentUpdootSection: React.FC<CommentUpdootSectionProps> = ({comme
           setIsLoading('not-loading')
         }}
         aria-label='updoot comment'
-        colorScheme={comment.voteStatus === 1 ? 'green' : undefined}
+        colorScheme={comment.commentVoteStatus === 1 ? 'green' : undefined}
         icon={<ChevronUpIcon w={6} h={6} />}
         />
         {comment.points}
         <IconButton
         isLoading={isLoading === 'downdoot-loading'}
         onClick={async () => {
-          if(comment.voteStatus === -1) {
+          if(comment.commentVoteStatus === -1) {
             return
           }
           setIsLoading('downdoot-loading');
@@ -48,7 +48,7 @@ export const CommentUpdootSection: React.FC<CommentUpdootSectionProps> = ({comme
           setIsLoading('not-loading');
         }}
         aria-label='downdoot post'
-        colorScheme={comment.voteStatus === -1 ? 'red' : undefined}
+        colorScheme={comment.commentVoteStatus === -1 ? 'red' : undefined}
         icon={<ChevronDownIcon w={6} h={6} />}
       />
       </Flex>

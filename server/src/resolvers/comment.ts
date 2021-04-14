@@ -48,18 +48,22 @@ export class CommentResolver {
   }
 
   @FieldResolver(() => Int)
-  async CommentVoteStatus(
+  async commentVoteStatus(
     @Root() comment: Comment,
     @Ctx() { commentUpdootLoader, req }: MyContext
   ) {
     if (!req.session.userId) {
       return null;
     }
+
+    console.log('comment vote status running')
     const commentUpdoot = await commentUpdootLoader.load({
       commentId: comment.id,
       userId: req.session.userId,
     });
-    return commentUpdoot ? commentUpdoot.value : null;
+
+    console.log('commentUpdoot: ', commentUpdoot!.value)
+    return commentUpdoot ? commentUpdoot!.value : null;
   }
 
   @Mutation(() => Boolean)
