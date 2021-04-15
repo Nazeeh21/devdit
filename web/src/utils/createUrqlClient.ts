@@ -98,17 +98,17 @@ const cursorPaginationforComments = (): Resolver => {
     // console.log(entityKey, fieldName);
 
     const allFields = cache.inspectFields(entityKey);
-    // console.log('allFields: ', allFields);
+    console.log('allFields: ', allFields);
 
     const fieldInfos = allFields.filter((info) => info.fieldName === fieldName);
-    // console.log(fieldInfos);
+    console.log(fieldInfos);
 
     const size = fieldInfos.length;
     if (size === 0) {
       return undefined;
     }
 
-    // console.log('fieldArgs: ', fieldArgs);
+    console.log('fieldArgs: ', fieldArgs);
 
     const fieldKey = `${fieldName}(${stringifyVariables(fieldArgs)})`;
     // console.log('Key we created: ', fieldKey);
@@ -182,6 +182,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
       cacheExchange({
         keys: {
           PaginatedPosts: () => null,
+          PaginatedComments: () => null,
         },
         resolvers: {
           Query: {

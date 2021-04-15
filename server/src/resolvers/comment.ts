@@ -145,12 +145,17 @@ export class CommentResolver {
 
     const replacements: any[] = [realLimitPlusOne];
 
+    if(cursor) {
+      replacements.push(new Date(+cursor))
+    }
+
+
     const comments = await getConnection().query(
       `
       select c.*
       from comment c
       where 
-      ${cursor ? `c."createdAt" < $2 &&` : ''}
+      ${cursor ? `c."createdAt" < $2 and` : ''}
       "postId" = ${postId}
       order by c."createdAt" DESC
       limit $1

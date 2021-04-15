@@ -15,7 +15,7 @@ const CreateComment: React.FC<{}> = ({}) => {
   useIsAuth();
   return (
     <Box mt={6}>
-      <Heading mb={2}>Create Comment</Heading>
+      <Heading fontSize='xl' mb={2}>Create Comment</Heading>
       <Formik
         initialValues={{ text: '' }}
         onSubmit={async (values) => {
@@ -31,9 +31,10 @@ const CreateComment: React.FC<{}> = ({}) => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <InputField name='text' placeholder='text' label='Text' />
+            <InputField name='text' placeholder='comment' label='Comment' />
             <Button
               mt={4}
+              mb={2}
               type='submit'
               isLoading={isSubmitting}
               colorScheme='teal'

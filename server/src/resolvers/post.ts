@@ -135,6 +135,10 @@ export class PostResolver {
 
     const replacements: any[] = [realLimitPlusOne];
 
+    if(cursor) {
+      replacements.push(new Date(+cursor))
+    }
+
     const posts = await getConnection().query(
       `
       select p.*

@@ -11,15 +11,14 @@ import { EditDeleteCommentButtons } from '../EditDeleteCommentButtons';
 import Wrapper from '../Wrapper';
 
 const Comments: React.FC = () => {
-  const intId = useGetIntId()
+  const intId = useGetIntId();
   const [variables, setVariables] = useState({
     limit: 10,
     cursor: null as string | null,
-    postId: intId
+    postId: intId,
   });
   const [{ data, error, fetching }] = useCommentsQuery({
     variables,
-    
   });
 
   if (!data && !fetching) {
@@ -35,7 +34,9 @@ const Comments: React.FC = () => {
   return (
     <Wrapper>
       <br />
-      <Heading mb={4}>Comments</Heading>
+      <Heading fontSize='2xl' mb={4}>
+        Comments
+      </Heading>
       {fetching && !data ? (
         <div>loading...</div>
       ) : (
@@ -52,7 +53,10 @@ const Comments: React.FC = () => {
 
                 <Box mt={4} ml='auto'>
                   {/* Edit delete comment Buttons */}
-                  <EditDeleteCommentButtons creatorId={comment.creator.id} id={comment.id} />
+                  <EditDeleteCommentButtons
+                    creatorId={comment.creator.id}
+                    id={comment.id}
+                  />
                 </Box>
               </Flex>
             )
@@ -84,4 +88,4 @@ const Comments: React.FC = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Comments)
+export default withUrqlClient(createUrqlClient)(Comments);
