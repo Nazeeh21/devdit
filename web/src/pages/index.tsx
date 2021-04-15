@@ -36,7 +36,7 @@ const Index = () => {
       {fetching && !data ? (
         <div>loading...</div>
       ) : (
-        <Stack mt={8}>
+        <Stack mt={8} mb={4}>
           {data!.posts.posts.map((post) =>
             !post ? null : (
               <Flex key={post.id} p={5} shadow='md' borderWidth='1px'>
@@ -68,7 +68,7 @@ const Index = () => {
         </Stack>
       )}
       {data && data.posts.hasMore && (
-        <Flex>
+        <Flex mb={2}>
           <Button
             onClick={() => {
               setVariables({

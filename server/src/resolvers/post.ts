@@ -18,6 +18,8 @@ import { isAuth } from '../middleware/isAuth';
 import { getConnection } from 'typeorm';
 import { Updoot } from '../entities/Updoot';
 import { User } from '../entities/User';
+import { Comment } from '../entities/Comment';
+import { CommentUpdoot } from '../entities/CommentUpdoot';
 
 @InputType()
 class PostInput {
@@ -124,7 +126,7 @@ export class PostResolver {
   @Query(() => PaginatedPosts)
   async posts(
     @Arg('limit', () => Int) limit: number,
-    @Arg('cursor', () => String, { nullable: true }) cursor: string | null,
+    @Arg('cursor', () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedPosts> {
     // 20 -> 21
     const realLimit = Math.min(50, limit);
@@ -132,6 +134,10 @@ export class PostResolver {
     const realLimitPlusOne = realLimit + 1;
 
     const replacements: any[] = [realLimitPlusOne];
+
+    if(cursor) {
+      replacements.push(new Date(+cursor))
+    }
 
     const posts = await getConnection().query(
       `
@@ -225,6 +231,18 @@ export class PostResolver {
     // await Post.delete({ id });
 
     await Post.delete({ id, creatorId: req.session.userId });
+
+    const comments = await Comment.find({ where: { postId: id } });
+
+    if (comments) {
+      await Comment.delete({ postId: id });
+    }
+
+    const commentUpdoots = await CommentUpdoot.find({ where: { postId: id }})
+
+    if(commentUpdoots) {
+      await CommentUpdoot.delete({ postId: id })
+    }
 
     return true;
   }

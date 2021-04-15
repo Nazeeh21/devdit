@@ -22,6 +22,15 @@ const createUpdootLoader = () => new dataloader_1.default((keys) => __awaiter(vo
         updootIdsToUpdoot[`${updoot.userId}|${updoot.postId}`] = updoot;
     });
     console.log('updoots: ', updoots);
+    console.log('----------------updootloader running ------------------');
+    console.log('updoots: ', updoots);
+    keys.map((key, index) => {
+        const content = updootIdsToUpdoot[`${key.userId}|${key.postId}`];
+        if (content == undefined) {
+            keys.slice(index, 1);
+        }
+        console.log('return from createUpdootLoader: ', content);
+    });
     return keys.map((key) => updootIdsToUpdoot[`${key.userId}|${key.postId}`]);
 }));
 exports.createUpdootLoader = createUpdootLoader;
