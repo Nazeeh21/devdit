@@ -301,6 +301,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 }
               );
               invalidateAllPosts(cache);
+              invalidateAllComments(cache)
             },
             register: (_result, _args, cache, _info) => {
               // ...
