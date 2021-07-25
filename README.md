@@ -16,6 +16,7 @@ Devdit provides an environment for developers to post updates about the new teck
 - `Nextjs`
 - `TypeScript`
 - `ChakraUI`
+- `Formik`
 - `Redis`
 
 ## Other tech stacks
